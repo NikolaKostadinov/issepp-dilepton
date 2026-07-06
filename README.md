@@ -1,7 +1,7 @@
 # ISSEP Dilepton Project
 
 $$
-Z \rightarrow l + \overbar{l}
+Z \rightarrow l + \bar{l}
 $$
 
 ## `dilepton.py`
