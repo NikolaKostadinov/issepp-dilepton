@@ -15,6 +15,13 @@ In order to identify this possible unknown particle we will use the spectrum of 
 The spectrum should be a Breit-Wigner distribution from a theoretical standpoint.
 So we are going to fit the result and extract the mass and decay width of the resonance which will be enough to prove the observation of the Z boson in the toy data.
 
+The results from the given data is a Z boson with the following mass and decay width:
+
+$$
+m_Z = 90 \mathrm{GeV}
+\Gamma_Z = 2 \mathrm{GeV}
+$$
+
 ## `dilepton.py`
 
 Use the `--help` flag to check the inline arguments.
