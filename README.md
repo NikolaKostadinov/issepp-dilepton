@@ -37,6 +37,10 @@ $$
 
 ![Dilepton Spectrum](assets/spec.png)
 
+However the toy data is not physical.
+This is because the leptons have random masses so we could not match them to the Standard model.
+The signal is also very clean and one does not need to filter out the background.
+
 ## `dilepton.py`
 
 In this implementation we have used `PyROOT`.
