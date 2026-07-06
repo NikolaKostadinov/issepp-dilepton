@@ -54,8 +54,6 @@ def main():
     parser.add_argument("-b", "--bins",  type=int,   default=100,                  help="number of bins in the m_ll spectrum")
     parser.add_argument("-m", "--min",   type=float, default=0.0,                  help="lower edge of the m_ll spectrum, in GeV")
     parser.add_argument("-M", "--max",   type=float, default=200.0,                help="upper edge of the m_ll spectrum, in GeV")
-    parser.add_argument("--fit-min",     type=float, default=70.0,                 help="lower edge of the Breit-Wigner fit range, in GeV")
-    parser.add_argument("--fit-max",     type=float, default=110.0,                help="upper edge of the Breit-Wigner fit range, in GeV")
     args = parser.parse_args()
 
     ROOT.gROOT.SetBatch(True)
@@ -74,7 +72,7 @@ def main():
     n_matched = n_matched.GetValue()
     n_total   = ROOT.RDataFrame(args.tree, args.input).Count().GetValue()
 
-    bw = ROOT.TF1("bw", "[0]*TMath::BreitWigner(x,[1],[2])", args.fit_min, args.fit_max)
+    bw = ROOT.TF1("bw", "[0]*TMath::BreitWigner(x,[1],[2])", args.min, args.max)
     bw.SetParameters(hist.GetMaximum(), 91.1876, 2.4952)
     bw.SetParNames("Norm", "Mass", "Width")
     hist.Fit(bw, "RQ")
