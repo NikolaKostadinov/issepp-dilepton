@@ -18,8 +18,11 @@ So we are going to fit the result and extract the mass and decay width of the re
 The results from the given data is a Z boson with the following mass and decay width:
 
 $$
-m_Z = 90 \mathrm{GeV}
-\Gamma_Z = 2 \mathrm{GeV}
+m_Z = 91.264 \pm 0.069 \mathrm{GeV}
+$$
+
+$$
+\Gamma_Z = 2.613 \pm 0.099 \mathrm{GeV}
 $$
 
 ## `dilepton.py`
