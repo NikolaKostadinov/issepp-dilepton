@@ -127,7 +127,7 @@ def main():
     print(f".------------------------------------------")
     print(f"| Z boson")
     print(f"+------------------------------------------")
-    print(f"| M_Z \t {mass:.2f} +- {mass_err:.2f} GeV")
+    print(f"| m_Z \t {mass:.2f} +- {mass_err:.2f} GeV")
     print(f"| Γ_Z \t  {width:.2f} +- {width_err:.2f} GeV")
     print()
     print(f".------------------------------------------")
