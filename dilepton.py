@@ -3,8 +3,7 @@ import os
 
 import ROOT
 
-
-def define_lepton_masses(input_path, tree_name):
+def define_m_les(input_path, tree_name):
 
     df = ROOT.RDataFrame(tree_name, input_path)
     df = (
@@ -30,7 +29,6 @@ def define_lepton_masses(input_path, tree_name):
 
     return df
 
-
 def find_lepton_antilepton_events(df, toler):
 
     df = (
@@ -49,8 +47,8 @@ def find_lepton_antilepton_events(df, toler):
 
     return df
 
-
 def main():
+
     parser = argparse.ArgumentParser(
         description="Log lepton-antilepton events (opposite charge, matching lepton mass) "
         "from a dilepton ROOT ntuple."
@@ -59,38 +57,36 @@ def main():
     parser.add_argument("output",             type=str,   default="dat/output.root",    help="output file")
     parser.add_argument("-t", "--tree",       type=str,   default="DATA",               help="name of the TTree in the file")
     parser.add_argument("-e", "--toler",      type=float, default=0.01,                 help="relative tolerance for treating two lepton masses as equal (default 1%%)")
-    parser.add_argument("-b", "--bins",       type=int,   default=100,                  help="number of bins in the m_ll spectrum")
-    parser.add_argument("-m", "--min",        type=float, default=0.0,                  help="lower edge of the m_ll spectrum in GeV")
-    parser.add_argument("-M", "--max",        type=float, default=200.0,                help="upper edge of the m_ll spectrum in GeV")
-    parser.add_argument("--lepton-bins",      type=int,   default=800,                  help="number of bins in the single-lepton mass spectrum")
-    parser.add_argument("--lepton-min",       type=float, default=0.0,                  help="lower edge of the single-lepton mass spectrum in MeV")
-    parser.add_argument("--lepton-max",       type=float, default=200.0,                help="upper edge of the single-lepton mass spectrum in MeV")
+    parser.add_argument("-b", "--bins",       type=int,   default=100,                  help="number of bins in the l_ll spectrum")
+    parser.add_argument("-m", "--min",        type=float, default=0.0,                  help="lower edge of the l_ll spectrum in GeV")
+    parser.add_argument("-M", "--max",        type=float, default=200.0,                help="upper edge of the l_ll spectrum in GeV")
+    parser.add_argument("-g", "--l-bins",     type=int,   default=800,                  help="number of bins in the single-lepton mass spectrum")
+    parser.add_argument("-j", "--l-min",      type=float, default=0.0,                  help="lower edge of the single-lepton mass spectrum in MeV")
+    parser.add_argument("-J", "--l-max",      type=float, default=200.0,                help="upper edge of the single-lepton mass spectrum in MeV")
     args = parser.parse_args()
 
     ROOT.gROOT.SetBatch(True)
+    ROOT.gErrorIgnoreLevel = ROOT.kWarning
 
     base, _   = os.path.splitext(args.output)
     root_path = f"{base}.root"
 
-    df_leptons = define_lepton_masses(args.input, args.tree)
+    df_leptons = define_m_les(args.input, args.tree)
     df         = find_lepton_antilepton_events(df_leptons, args.toler)
 
     n_matched = df.Count()
     hist = df.Histo1D(
-        ("mll_spectrum", "Dilepton invariant mass;m_{ll} / GeV;Events", args.bins, args.min, args.max),
+        ("mll_spectrum", "Dilepton invariant mass;l_{ll} / GeV;Events", args.bins, args.min, args.max),
         "mll",
     )
 
-    # Mass of every reconstructable lepton (both legs, unmatched), to check
-    # it against the known electron/muon masses. Converted to MeV here, for
-    # display only, since m1/m2 are used in GeV elsewhere.
     df_leptons_mev = df_leptons.Define("m1_MeV", "m1 * 1000.0").Define("m2_MeV", "m2 * 1000.0")
     hist_m1 = df_leptons_mev.Histo1D(
-        ("lepton_mass_1", "Single-lepton mass;m_{lepton} / MeV;Leptons", args.lepton_bins, args.lepton_min, args.lepton_max),
+        ("m_l_1", "Single-lepton mass;l_{lepton} / MeV;Leptons", args.l_bins, args.l_min, args.l_max),
         "m1_MeV",
     )
     hist_m2 = df_leptons_mev.Histo1D(
-        ("lepton_mass_2", "Single-lepton mass;m_{lepton} / MeV;Leptons", args.lepton_bins, args.lepton_min, args.lepton_max),
+        ("m_l_2", "Single-lepton mass;l_{lepton} / MeV;Leptons", args.l_bins, args.l_min, args.l_max),
         "m2_MeV",
     )
 
@@ -102,15 +98,15 @@ def main():
     bw.SetParNames("Norm", "Mass", "Width")
     hist.Fit(bw, "RQ")
 
-    hist_lepton = hist_m1.GetValue().Clone("lepton_mass")
+    hist_lepton = hist_m1.GetValue().Clone("m_l")
     hist_lepton.Add(hist_m2.GetPtr())
 
-    canvas = ROOT.TCanvas("c", "c", 800, 600)
+    canvas = ROOT.TCanvas("c_ll", "c_ll", 800, 600)
     hist.Draw()
     bw.Draw("same")
     canvas.SaveAs(f"{base}_{hist.GetName()}.png")
 
-    canvas_lepton = ROOT.TCanvas("c_lepton", "c_lepton", 800, 600)
+    canvas_lepton = ROOT.TCanvas("c_l", "c_l", 800, 600)
     hist_lepton.Draw()
     canvas_lepton.SaveAs(f"{base}_{hist_lepton.GetName()}.png")
 
@@ -123,9 +119,25 @@ def main():
     mass,  mass_err  = bw.GetParameter(1), bw.GetParError(1)
     width, width_err = bw.GetParameter(2), bw.GetParError(2)
 
-    print(f"M_Z = {mass:.3f} +- {mass_err:.3f} GeV")
-    print(f"Γ_Z = {width:.3f} +- {width_err:.3f} GeV")
-    print(f"{n_matched}/{n_total} events")
+    chi2    = bw.GetChisquare()
+    ndf     = bw.GetNDF()
+    p_value = ROOT.TMath.Prob(chi2, ndf)
+    
+    print()
+    print(f".------------------------------------------")
+    print(f"| Z boson")
+    print(f"+------------------------------------------")
+    print(f"| M_Z \t {mass:.2f} +- {mass_err:.2f} GeV")
+    print(f"| Γ_Z \t  {width:.2f} +- {width_err:.2f} GeV")
+    print()
+    print(f".------------------------------------------")
+    print(f"| Breit-Wigner Fit")
+    print(f"+------------------------------------------")
+    print(f"| chi2/ndf \t {chi2:.1f}/{ndf} = {chi2/ndf:.2f}")
+    print(f"| p value  \t {p_value:.3f}")
+    print()
+    print(f"{n_matched} / {n_total} dilepton events")
+    print()
 
 
 if __name__ == "__main__":
