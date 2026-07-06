@@ -18,7 +18,9 @@ p_{Z} = p_{l} + p_{\bar{l}}
 $$
 
 The spectrum should be a Breit-Wigner distribution from a theoretical standpoint.
-So we are going to fit the result and extract the mass and decay width of the resonance which will be enough to prove the observation of the Z boson in the toy data.
+This distribution can be derived from the optical theorem applied for the amplitude of the one to two decay.
+For a unstable particle with mass $m$ and a decay width $\Gamma$ we can find the "probability" of the decay by squaring the Feynman amplitude which is shown in the next formula.
+We are going to fit the result and extract the mass and decay width of the resonance which will be enough to prove the observation of the Z boson in the toy data.
 
 $$
 \left|\frac{i}{p^2 - m^2 + im\Gamma}\right|^2
@@ -28,8 +30,8 @@ The results from the given data is a Z boson with the following mass and decay w
 
 $$
 \begin{aligned}
-m_Z      &= 91.26 \pm 0.07 \mathrm{GeV} \\
-\Gamma_Z &= 2.61 \pm 0.10 \mathrm{GeV}
+m_Z      &= 91.3 \pm 0.1 \mathrm{GeV} \\
+\Gamma_Z &= 2.6 \pm 0.1 \mathrm{GeV}
 \end{aligned}
 $$
 
