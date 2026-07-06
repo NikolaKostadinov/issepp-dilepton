@@ -76,17 +76,17 @@ def main():
 
     n_matched = df.Count()
     hist = df.Histo1D(
-        ("mll_spectrum", "Dilepton invariant mass;l_{ll} / GeV;Events", args.bins, args.min, args.max),
+        ("mll_spectrum", "Dilepton invariant mass;m_{l\\bar{l}} / GeV;Events", args.bins, args.min, args.max),
         "mll",
     )
 
     df_leptons_mev = df_leptons.Define("m1_MeV", "m1 * 1000.0").Define("m2_MeV", "m2 * 1000.0")
     hist_m1 = df_leptons_mev.Histo1D(
-        ("m_l_1", "Single-lepton mass;l_{lepton} / MeV;Leptons", args.l_bins, args.l_min, args.l_max),
+        ("m_l_1", "Single-lepton mass;m_{l} / MeV;Leptons", args.l_bins, args.l_min, args.l_max),
         "m1_MeV",
     )
     hist_m2 = df_leptons_mev.Histo1D(
-        ("m_l_2", "Single-lepton mass;l_{lepton} / MeV;Leptons", args.l_bins, args.l_min, args.l_max),
+        ("m_l_2", "Single-lepton mass;m_{l} / MeV;Leptons", args.l_bins, args.l_min, args.l_max),
         "m2_MeV",
     )
 
