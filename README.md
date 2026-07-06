@@ -25,6 +25,8 @@ $$
 \Gamma_Z = 2.613 \pm 0.099 \mathrm{GeV}
 $$
 
+![Dilepton Spectrum](assets/spec.png)
+
 ## `dilepton.py`
 
 Use the `--help` flag to check the inline arguments.
