@@ -52,7 +52,7 @@ def main():
     parser.add_argument("-t", "--tree",  type=str,   default="DATA",               help="name of the TTree in the file")
     parser.add_argument("-e", "--toler", type=float, default=0.01,                 help="relative tolerance for treating two lepton masses as equal (default 1%%)")
     parser.add_argument("-b", "--bins",  type=int,   default=100,                  help="number of bins in the m_ll spectrum")
-    parser.add_argument("-n", "--min",   type=float, default=0.0,                  help="lower edge of the m_ll spectrum, in GeV")
+    parser.add_argument("-m", "--min",   type=float, default=0.0,                  help="lower edge of the m_ll spectrum, in GeV")
     parser.add_argument("-M", "--max",   type=float, default=200.0,                help="upper edge of the m_ll spectrum, in GeV")
     parser.add_argument("--fit-min",     type=float, default=70.0,                 help="lower edge of the Breit-Wigner fit range, in GeV")
     parser.add_argument("--fit-max",     type=float, default=110.0,                help="upper edge of the Breit-Wigner fit range, in GeV")
